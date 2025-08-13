@@ -1,0 +1,4 @@
+Flask>=2.2
+python-dotenv>=1.0
+youtube-transcript-api>=1.0
+google-generativeai>=0.3.2    # legacy SDK; instructions below

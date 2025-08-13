@@ -1,0 +1,74 @@
+/* Body background and typography */
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    padding-top: 2.5rem;
+}
+
+/* Heading */
+h1 {
+    font-weight: 600;
+    text-align: center;
+    color: #0077b6;
+    margin-bottom: 1.5rem;
+}
+
+/* Form styling */
+form {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Input fields */
+input.form-control {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+input.form-control:focus {
+    border-color: #0077b6;
+    box-shadow: 0 0 0 0.15rem rgba(0, 119, 182, 0.25);
+}
+
+/* Buttons */
+.btn-primary {
+    background: #0077b6;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.btn-primary:hover {
+    background: #005f87;
+}
+
+/* Summary Card */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background: #fdfdfd;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.95rem;
+}
+
+/* Alert boxes */
+.alert {
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+}
+
+/* Processing text */
+#busy {
+    font-style: italic;
+    color: #6c757d;
+}
