@@ -16,7 +16,8 @@ except Exception:
 
 load_dotenv()  # loads .env if present
 
-GENAI_API_KEY = os.getenv("GENAI_API_KEY")  # put your key here
+# GENAI_API_KEY = os.getenv("GENAI_API_KEY")  # put your key here
+GENAI_API_KEY = "AIzaSyBeEjmSLXVAFS-Chr6gHvRDBpaLeLD9-BI"
 if GENAI_API_KEY and LEGACY_GENAI:
     genai.configure(api_key=GENAI_API_KEY)
 elif GENAI_API_KEY and not LEGACY_GENAI:
