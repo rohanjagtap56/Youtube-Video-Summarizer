@@ -5,6 +5,7 @@ import textwrap
 from flask import Flask, render_template, request, redirect, url_for, flash
 from youtube_transcript_api import YouTubeTranscriptApi
 from dotenv import load_dotenv
+import markdown
 
 # Try to import Google's legacy SDK (matches your original)
 try:
@@ -16,8 +17,7 @@ except Exception:
 
 load_dotenv()  # loads .env if present
 
-# GENAI_API_KEY = os.getenv("GENAI_API_KEY")  # put your key here
-GENAI_API_KEY = "AIzaSyBeEjmSLXVAFS-Chr6gHvRDBpaLeLD9-BI"
+GENAI_API_KEY =   # put your key here
 if GENAI_API_KEY and LEGACY_GENAI:
     genai.configure(api_key=GENAI_API_KEY)
 elif GENAI_API_KEY and not LEGACY_GENAI:
@@ -26,13 +26,26 @@ elif GENAI_API_KEY and not LEGACY_GENAI:
     print("GENAI key found but google.generativeai package not importable. Install google-generativeai or switch SDK.")
 
 app = Flask(__name__)
-# app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", "dev-secret")
-app.config["SECRET_KEY"] = "a0c1b6e3b77a8217a0ef3f983f01c7b"
+app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", "dev-secret")
 
 # ---------------- utility functions ----------------
+# def get_video_id(url: str) -> str:
+#     if "watch?v=" in url:
+#         return url.split("watch?v=")[1].split("&")[0]
+#     return ""
+
 def get_video_id(url: str) -> str:
-    if "watch?v=" in url:
-        return url.split("watch?v=")[1].split("&")[0]
+    # Try matching common YouTube URL formats
+    patterns = [
+        r"(?:v=)([0-9A-Za-z_-]{11})",             # watch?v=VIDEO_ID
+        r"youtu\.be/([0-9A-Za-z_-]{11})",         # youtu.be/VIDEO_ID
+        r"youtube\.com/live/([0-9A-Za-z_-]{11})"  # youtube.com/live/VIDEO_ID
+    ]
+    
+    for pattern in patterns:
+        match = re.search(pattern, url)
+        if match:
+            return match.group(1)
     return ""
 
 def get_transcript(video_id: str, languages: list) -> tuple[str, str] | tuple[None, None]:
@@ -70,7 +83,7 @@ def chunk_text(text: str, max_chars: int = 3000) -> list[str]:
         chunks.append(cur)
     return chunks
 
-def summarize_chunk_gemini(chunk: str, model_name: str = "gemini-1.5-flash-latest") -> str:
+def summarize_chunk_gemini(chunk: str, model_name: str = "gemini-2.5-flash") -> str:
     """
     Call Gemini (legacy google.generativeai) to summarize the chunk.
     Returns the model text or None on error.
@@ -80,7 +93,7 @@ def summarize_chunk_gemini(chunk: str, model_name: str = "gemini-1.5-flash-lates
     try:
         # using legacy SDK usage pattern
         model = genai.GenerativeModel(model_name)
-        prompt = f"Please provide a summary of the following text and do not loose any analytical data:\n\n{chunk}"
+        prompt = f"Please provide a English summary of the following text and do not lose any analytical data also give the Title Heading for it:\n\n{chunk}"
         resp = model.generate_content(prompt)
         # resp.text contains generated text in legacy SDK
         return resp.text.strip() if getattr(resp, "text", None) else str(resp)
@@ -139,12 +152,15 @@ def summarize_route():
 
     summary = summarize_transcript(transcript)
     # keep summary reasonably short in UI
-    short_summary = textwrap.fill(summary, width=100)
+    # short_summary = textwrap.fill(summary, width=100)
+    
+    summary_html = markdown.markdown(summary)
     return render_template("index.html",
                            youtube_url=youtube_url,
                         #    transcript=transcript,
                         #    language=language,
-                           summary=short_summary
+                        #    summary=short_summary
+                           summary=summary_html
                            )
 
 if __name__ == "__main__":
