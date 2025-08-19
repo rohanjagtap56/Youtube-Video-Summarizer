@@ -17,7 +17,7 @@ except Exception:
 
 load_dotenv()  # loads .env if present
 
-GENAI_API_KEY =   # put your key here
+GENAI_API_KEY = "AIzaSyBeEjmSLXVAFS-Chr6gHvRDBpaLeLD9-BI"  # put your key here
 if GENAI_API_KEY and LEGACY_GENAI:
     genai.configure(api_key=GENAI_API_KEY)
 elif GENAI_API_KEY and not LEGACY_GENAI:
@@ -26,7 +26,7 @@ elif GENAI_API_KEY and not LEGACY_GENAI:
     print("GENAI key found but google.generativeai package not importable. Install google-generativeai or switch SDK.")
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", "dev-secret")
+app.config["SECRET_KEY"] = "a0c1b6e3b77a8217a0ef3f983f01c7b"
 
 # ---------------- utility functions ----------------
 # def get_video_id(url: str) -> str:
